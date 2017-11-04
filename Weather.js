@@ -1,81 +1,55 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, StatusBar } from "react-native";
-import Weather from "./Weather";
-import {Ionicons} from "@expo/vector-icons";
+import { StyleSheet, Text, View } from "react-native";
+import { LinearGradient } from "expo";
+import { Iconicons } from "@expo/vector-icons";
 
-const API_KEY = "8042367a40d903407a2eee2c0cfa759a";
-
-export default class App extends Component {
-    state = {
-        isLoaded: false,
-        error: null,
-        temperature: null,
-        name: null
-    };
-    componentDidMount() {
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                this._getWeather(position.coords.latitude, position.coords.longitude);
-            },
-            error => {
-                this.setState({
-                    error: error
-                });
-            }
-        );
-    }
-    _getWeather = (lat, long) => {
-        fetch(
-            `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&APPID=${API_KEY}`
-        )
-            .then(response => response.json())
-            .then(json => {
-                this.setState({
-                    temperature: json.main.temp,
-                    name: json.weather[0].main,
-                    isLoaded: true
-                });
-            });
-    };
-    render() {
-        const { isLoaded, error, temperature, name } = this.state;
-        return (
-            <View style={styles.container}>
-                <StatusBar hidden={true} />
-                {isLoaded ? (
-                    <Weather
-                        weatherName={"Mist"}
-                        temp={Math.ceil(temperature - 273.15)}
-                    />
-                ) : (
-                        <View style={styles.loading}>
-                            <Text style={styles.loadingText}>Getting the fucking weather</Text>
-                            {error ? <Text style={styles.errorText}>{error}</Text> : null}
-                        </View>
-                    )}
+export default class Weather extends Component {
+    render(){
+        return <LinearGradient colors={["#00c6fb", "#005bea"]} style={styles.container}>
+            <View style={styles.upper}>
+       
+              <Text style={styles.temp}>35도</Text>
             </View>
-        );
+            <View style={styles.lower}>
+              <Text style={styles.title}>비가 내리고 있습니다.</Text>
+              <Text style={styles.subtitle}>더 많은 정보를 위해서 알아보기</Text>
+            </View>
+          </LinearGradient>;
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff"
+    container:{
+        flex:1
     },
-    errorText: {
-        color: "red",
+    upper: {
+        flex:1,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    temp: {
+        fontSize: 48,
         backgroundColor: "transparent",
-        marginBottom: 40
+        color: "white",
+        marginTop: 10
     },
-    loading: {
+    lower: {
         flex: 1,
-        backgroundColor: "#FDF6AA",
+        alignItems: "flex-start",
         justifyContent: "flex-end",
         paddingLeft: 25
     },
-    loadingText: {
+    title: {
         fontSize: 38,
+        backgroundColor: "transparent",
+        color: "white",
+        marginBottom: 10,
+        fontWeight: "300"      
+    },
+    subtitle: {
+        fontSize: 24,
+        backgroundColor: "transparent",
+        color: "white",
         marginBottom: 24
     }
-});
+})
